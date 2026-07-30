@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Panasonic Viera Remote</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#121212">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h2 {
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        #status {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: #222;
+            text-align: center;
+        }
+
+        .connected {
+            color: #4caf50;
+        }
+
+        .disconnected {
+            color: #f44336;
+        }
+
+        .remote-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 100%;
+            max-width: 400px;
+            align-items: center;
+        }
+
+        .top-section {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 240px;
+        }
+
+        .power-btn {
+            position: absolute;
+            left: 0;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #2c2c2c;
+            color: #ff4444;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .right-btns {
+            position: absolute;
+            right: 0;
+            width: 60px;
+            height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .right-btns button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #2c2c2c;
+            color: white;
+            border: none;
+            font-size: 0.7rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+        }
+
+        .dpad {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            background: #1e1e1e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .dpad button {
+            position: absolute;
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: background 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 65px;
+            height: 65px;
+        }
+
+        .dpad button:active {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+        .dpad-up {
+            top: 15px;
+        }
+
+        .dpad-down {
+            bottom: 15px;
+        }
+
+        .dpad-left {
+            left: 15px;
+        }
+
+        .dpad-right {
+            right: 15px;
+        }
+
+        .dpad-ok {
+            width: 100px;
+            height: 100px;
+            background: #2c2c2c;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        .numeric-pad {
+            width: 220px;
+            height: 220px;
+            background: #1e1e1e;
+            border-radius: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 10px;
+            padding: 15px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .numeric-pad button {
+            background: #2c2c2c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .middle-section {
+            display: grid;
+            grid-template-columns: 80px 1fr 80px;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .col-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .col-btns button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #2c2c2c;
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .col-label {
+            font-size: 0.7rem;
+            color: #888;
+            text-transform: uppercase;
+            margin: 5px 0;
+        }
+
+        .grid-btns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .grid-btns button {
+            height: 60px;
+            background: #2c2c2c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .playback-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .color-section {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .color-section button {
+            height: 30px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .btn-red {
+            background: #d32f2f;
+        }
+
+        .btn-green {
+            background: #388e3c;
+        }
+
+        .btn-yellow {
+            background: #fbc02d;
+            color: #000;
+        }
+
+        .btn-blue {
+            background: #1976d2;
+        }
+
+        .playback-section button {
+            height: 60px;
+            background: #2c2c2c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: scale(0.95);
+            background: #3a3a3a !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="status">Panasonic Connecting...</div>
+
+    <div class="remote-container">
+        <div class="top-section">
+            <button class="power-btn" onclick="sendKey('NRC_POWER-ONOFF')">
+                <svg viewBox="0 0 24 24" width="30" height="30" stroke="currentColor" stroke-width="2.5" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+                    <line x1="12" y1="2" x2="12" y2="12"></line>
+                </svg>
+            </button>
+
+            <div id="dpad-container">
+                <div class="dpad" id="dpad-view" style="display:flex">
+                    <button class="dpad-up" onclick="sendKey('NRC_UP-ONOFF')">▲</button>
+                    <button class="dpad-down" onclick="sendKey('NRC_DOWN-ONOFF')">▼</button>
+                    <button class="dpad-left" onclick="sendKey('NRC_LEFT-ONOFF')">◀</button>
+                    <button class="dpad-right" onclick="sendKey('NRC_RIGHT-ONOFF')">▶</button>
+                    <button class="dpad-ok" onclick="sendKey('NRC_ENTER-ONOFF')">OK</button>
+                </div>
+                <div class="numeric-pad" id="numeric-view" style="display:none">
+                    <button onclick="sendKey('NRC_D1-ONOFF')">1</button>
+                    <button onclick="sendKey('NRC_D2-ONOFF')">2</button>
+                    <button onclick="sendKey('NRC_D3-ONOFF')">3</button>
+                    <button onclick="sendKey('NRC_D4-ONOFF')">4</button>
+                    <button onclick="sendKey('NRC_D5-ONOFF')">5</button>
+                    <button onclick="sendKey('NRC_D6-ONOFF')">6</button>
+                    <button onclick="sendKey('NRC_D7-ONOFF')">7</button>
+                    <button onclick="sendKey('NRC_D8-ONOFF')">8</button>
+                    <button onclick="sendKey('NRC_D9-ONOFF')">9</button>
+                    <button style="grid-column: 2;" onclick="sendKey('NRC_D0-ONOFF')">0</button>
+                </div>
+            </div>
+
+            <div class="right-btns">
+                <button onclick="sendKey('NRC_MENU-ONOFF')">Menu</button>
+                <button onclick="togglePad()">🔢</button>
+            </div>
+        </div>
+
+        <div class="middle-section">
+            <div class="col-btns">
+                <span class="col-label">CH</span>
+                <button onclick="sendKey('NRC_CH_UP-ONOFF')">▲</button>
+                <button onclick="sendKey('NRC_CH_DOWN-ONOFF')">▼</button>
+            </div>
+
+            <div class="grid-btns">
+                <button onclick="sendKey('NRC_HOME-ONOFF')">🏠<br>Home</button>
+                <button onclick="sendKey('NRC_MUTE-ONOFF')">🔇<br>Mute</button>
+                <button onclick="sendKey('NRC_CHG_INPUT-ONOFF')">📺<br>Input</button>
+                <button onclick="sendKey('NRC_RETURN-ONOFF')">↩<br>Return</button>
+                <button onclick="sendKey('NRC_EPG-ONOFF')">📅<br>Guide</button>
+                <button onclick="sendKey('NRC_APPS-ONOFF')">⠿<br>Apps</button>
+            </div>
+
+            <div class="col-btns">
+                <span class="col-label">VOL</span>
+                <button onclick="sendKey('NRC_VOLUP-ONOFF')">▲</button>
+                <button onclick="sendKey('NRC_VOLDOWN-ONOFF')">▼</button>
+            </div>
+        </div>
+
+        <div class="playback-section">
+            <button onclick="sendKey('NRC_REW-ONOFF')">⏪</button>
+            <button onclick="sendPlayPause()">⏯</button>
+            <button onclick="sendKey('NRC_STOP-ONOFF'); setPlaybackState(false)">⏹</button>
+            <button onclick="sendKey('NRC_FF-ONOFF')">⏩</button>
+            <button onclick="sendKey('NRC_SKIP_PREV-ONOFF')">⏮</button>
+            <button onclick="sendKey('NRC_REC-ONOFF')" style="color: #ff4444;">●</button>
+            <button onclick="sendKey('NRC_UP-ONOFF')">🔼</button>
+            <button onclick="sendKey('NRC_SKIP_NEXT-ONOFF')">⏭</button>
+        </div>
+
+        <div class="color-section">
+            <button class="btn-red" onclick="sendKey('NRC_RED-ONOFF')"></button>
+            <button class="btn-green" onclick="sendKey('NRC_GREEN-ONOFF')"></button>
+            <button class="btn-yellow" onclick="sendKey('NRC_YELLOW-ONOFF')"></button>
+            <button class="btn-blue" onclick="sendKey('NRC_BLUE-ONOFF')"></button>
+        </div>
+    </div>
+
+    <script>
+        let isPlaying = false;
+
+        function setPlaybackState(playing) {
+            isPlaying = playing;
+        }
+
+        async function sendPlayPause() {
+            const key = isPlaying ? 'NRC_PAUSE-ONOFF' : 'NRC_PLAY-ONOFF';
+            await sendKey(key);
+            setPlaybackState(!isPlaying);
+        }
+
+        // Check connection status periodically
+        async function checkStatus() {
+            try {
+                let res = await fetch('/api/discover');
+                let data = await res.json();
+                let statusEl = document.getElementById('status');
+                if (data.connected) {
+                    statusEl.innerText = `Panasonic Connected (${data.ip})`;
+                    statusEl.className = "connected";
+                } else {
+                    statusEl.innerText = "Panasonic Offline";
+                    statusEl.className = "disconnected";
+                }
+            } catch (e) {
+                document.getElementById('status').innerText = "Panasonic Proxy Unreachable";
+                document.getElementById('status').className = "disconnected";
+            }
+        }
+
+        async function sendKey(keyEvent) {
+            try {
+                await fetch('/api/remote', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ keyEvent: keyEvent })
+                });
+            } catch (err) {
+                console.error("Failed to send command:", err);
+            }
+        }
+
+        function togglePad() {
+            const dpad = document.getElementById('dpad-view');
+            const numeric = document.getElementById('numeric-view');
+            if (dpad.style.display === 'none') {
+                dpad.style.display = 'flex';
+                numeric.style.display = 'none';
+            } else {
+                dpad.style.display = 'none';
+                numeric.style.display = 'grid';
+            }
+        }
+
+        setInterval(checkStatus, 3000);
+        checkStatus();
+
+        // Register Service Worker for PWA install capability
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+
+</html>

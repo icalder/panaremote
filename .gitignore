@@ -1,0 +1,39 @@
+# Binaries for apps
+bin/
+panaremote
+
+# Package lock files
+# go.sum is usually committed, but some prefer to ignore it in specific cases. 
+# Keeping it as per Go standards.
+
+# Vendor directory
+# vendor/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build and test artifacts
+coverage.out
+*.test
+*.out
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Environment variables
+.env
+
+# Nix build artifacts
+result/
+result
+
+# Images used in dev
+legacy-app-main.png

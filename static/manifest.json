@@ -1,0 +1,8 @@
+{
+    "short_name": "VieraRemote",
+    "name": "Panasonic Viera Remote",
+    "start_url": "/",
+    "background_color": "#121212",
+    "theme_color": "#121212",
+    "display": "standalone"
+}
