@@ -457,7 +457,13 @@
 
         // Register Service Worker for PWA install capability
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
+            navigator.serviceWorker.register('sw.js')
+                .then((registration) => {
+                    console.log('Service Worker registered:', registration.scope);
+                })
+                .catch((err) => {
+                    console.error('Service Worker registration failed:', err);
+                });
         }
     </script>
 </body>
