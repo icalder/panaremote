@@ -9,7 +9,7 @@
 
 const CACHE_NAME = "panaremote-v1";
 const ASSETS_TO_CACHE = [
-    "/index.html",
+    "/", // note, not /index.html - that redirects to / with a 301
     "/manifest.json",
     "/sw.js",
     "/icon-48.png",
@@ -105,7 +105,7 @@ self.addEventListener("fetch", (event) => {
                         caches.open(CACHE_NAME).then((cache) => {
                             cache.put(request, networkResponse);
                         });
-                    }).catch(() => {});
+                    }).catch(() => { });
                     return cachedResponse;
                 }
 
