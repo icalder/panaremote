@@ -378,10 +378,10 @@
         </div>
 
         <div class="playback-section">
-            <button onclick="sendKey('NRC_REW-ONOFF')">⏪</button>
+            <button onclick="sendKey('NRC_REW-ONOFF'); setPlaybackState(false)">⏪</button>
             <button onclick="sendPlayPause()">⏯</button>
             <button onclick="sendKey('NRC_STOP-ONOFF'); setPlaybackState(false)">⏹</button>
-            <button onclick="sendKey('NRC_FF-ONOFF')">⏩</button>
+            <button onclick="sendKey('NRC_FF-ONOFF'); setPlaybackState(false)">⏩</button>
             <button onclick="sendKey('NRC_SKIP_PREV-ONOFF')">⏮</button>
             <button onclick="sendKey('NRC_REC-ONOFF')" style="color: #ff4444;">●</button>
             <button onclick="sendKey('NRC_UP-ONOFF')">🔼</button>
